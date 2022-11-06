@@ -1,5 +1,6 @@
 import Router from '@koa/router'
 import { createReadStream, createWriteStream } from 'fs'
+import fs from 'fs-extra'
 import Koa from 'koa'
 import { koaBody } from 'koa-body'
 import cors from 'koa-cors'
@@ -15,35 +16,31 @@ const UPLOAD_DIR = './public/upload'
 const initPah = file =>
   fileURLToPath(new URL(`${UPLOAD_DIR}/${file}`, import.meta.url))
 
-class Store {
-  constructor() {
-    this.store = {}
+const store = new Map()
+
+const addStore = (key, cb) => {
+  const hasKey = store.has(key)
+  if (!hasKey) {
+    store.set(key, {
+      total: 0,
+      chunk: {}
+    })
   }
+  const keyValue = store.get(key)
+  cb(keyValue)
 
-  async on(key, cb) {
-    if (!(key in this.store)) {
-      this.store[key] = {
-        total: 0,
-        chunk: {}
-      }
-    }
-    cb(this.store[key])
+  const { chunk, total } = keyValue
+  const list = Object.values(chunk)
 
-    const { chunk, total } = this.store[key]
-    const list = Object.values(chunk)
-
-    if (list.length == total) {
-      const writer = createWriteStream(initPah(key))
-      streamWrite(key, list, writer)
-    }
+  if (list.length === total * 1) {
+    const writer = createWriteStream(initPah(key))
+    streamWrite(key, list, writer)
   }
 }
 
-const chunksMap = new Store()
-
 const streamWrite = (key, list, writer) => {
   const [path, ...rest] = list
-  if (!path) return delete chunksMap.store[key]
+  if (!path) return store.delete(key)
 
   const reader = createReadStream(path)
   reader.pipe(writer, { end: false })
@@ -62,10 +59,19 @@ router.post('/upload', koaBody({ multipart: true }), ctx => {
     cur,
     msg: '上传成功'
   }
-  chunksMap.on(filename, obj => {
+  addStore(filename, obj => {
     obj.total = total
     obj.chunk[hash] = filepath
   })
+})
+
+router.post('/delete', koaBody(), ctx => {
+  const { name } = JSON.parse(ctx.request.body)
+  fs.removeSync(initPah(name))
+  ctx.body = {
+    code: 200,
+    msg: '删除成功'
+  }
 })
 
 app.listen(3000)
