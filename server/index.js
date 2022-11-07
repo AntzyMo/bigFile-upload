@@ -12,9 +12,16 @@ app.use(cors())
 app.use(router.routes())
 
 const UPLOAD_DIR = './public/upload'
+const UPLOAD_CACHE = './public/cache'
 
-const initPah = file =>
-  fileURLToPath(new URL(`${UPLOAD_DIR}/${file}`, import.meta.url))
+const initPath = (dir, file) => {
+  const fileDir = file ? `/${file}` : ''
+  return fileURLToPath(new URL(`${dir}${fileDir}`, import.meta.url))
+}
+
+// 初始化上传文件夹
+fs.ensureDirSync(initPath(UPLOAD_DIR))
+fs.ensureDirSync(initPath(UPLOAD_CACHE))
 
 const store = new Map()
 
@@ -33,7 +40,7 @@ const addStore = (key, cb) => {
   const list = Object.values(chunk)
 
   if (list.length === total * 1) {
-    const writer = createWriteStream(initPah(key))
+    const writer = createWriteStream(initPath(UPLOAD_DIR, key))
     streamWrite(key, list, writer)
   }
 }
@@ -49,25 +56,33 @@ const streamWrite = (key, list, writer) => {
   })
 }
 
-router.post('/upload', koaBody({ multipart: true }), ctx => {
-  const { filename, hash, total, cur } = ctx.request.body
-  const filepath = ctx.request.files.chunk.filepath
-  ctx.body = {
-    code: 200,
-    filename,
-    total,
-    cur,
-    msg: '上传成功'
+router.post(
+  '/upload',
+  koaBody({
+    multipart: true,
+    formidable: { uploadDir: initPath(UPLOAD_CACHE) }
+  }),
+  ctx => {
+    const { filename, hash, total, cur } = ctx.request.body
+    const filepath = ctx.request.files.chunk.filepath
+    ctx.body = {
+      code: 200,
+      filename,
+      total,
+      cur,
+      msg: '上传成功'
+    }
+    addStore(filename, obj => {
+      obj.total = total
+      obj.chunk[hash] = filepath
+    })
   }
-  addStore(filename, obj => {
-    obj.total = total
-    obj.chunk[hash] = filepath
-  })
-})
+)
 
 router.post('/delete', koaBody(), ctx => {
   const { name } = JSON.parse(ctx.request.body)
-  fs.removeSync(initPah(name))
+  fs.removeSync(initPath(UPLOAD_DIR, name))
+  fs.removeSync(initPath(UPLOAD_CACHE, 'cache'))
   ctx.body = {
     code: 200,
     msg: '删除成功'
