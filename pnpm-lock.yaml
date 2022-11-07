@@ -12,6 +12,7 @@ specifiers:
   koa: ^2.13.4
   koa-body: ^6.0.1
   koa-cors: ^0.0.16
+  nodemon: ^2.0.20
   npm-run-all: ^4.1.5
   sass: ^1.56.0
   typescript: ~4.7.4
@@ -36,6 +37,7 @@ devDependencies:
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.2+vue@3.2.41
   '@vue/tsconfig': 0.1.3
   eslint: 8.26.0
+  nodemon: 2.0.20
   npm-run-all: 4.1.5
   sass: 1.56.0
   typescript: 4.7.4
@@ -80,11 +82,10 @@ packages:
       prettier: 2.7.1
     dev: true
 
-  /@antzy/eslint-config-ts/1.4.9_t7ph7dpvh7g5bfovntuojbuu4i:
+  /@antzy/eslint-config-ts/1.4.9_eslint@8.26.0:
     resolution: {integrity: sha512-kDwe0Bl/88CC547XQtm70MrV03GEfZcvgvhbOhBuaxw4EeClET/ZEDkzoAATi3TwjepRHZyQGM3RnN2kC3YKUA==}
     peerDependencies:
       eslint: '>=8.18.0'
-      typescript: '>=4.7.4'
     dependencies:
       '@antzy/eslint-config-basic': 1.4.9_c2flhriocdzler6lrwbyxxyoca
       '@typescript-eslint/eslint-plugin': 5.41.0_xkoez77pqhokuvzzbmebx7tr74
@@ -97,13 +98,12 @@ packages:
       - supports-color
     dev: true
 
-  /@antzy/eslint-config-vue/1.4.9_t7ph7dpvh7g5bfovntuojbuu4i:
+  /@antzy/eslint-config-vue/1.4.9_eslint@8.26.0:
     resolution: {integrity: sha512-SzXMDO8ZwgABHdQCdhjtyAkHj9mN6d43mJsFoW73bkGwoMRgte5ihqw40HEwRH1AvXIP37FQwO79veP85LKtWg==}
     peerDependencies:
       eslint: '>=8.18.0'
-      typescript: '>=4.7.4'
     dependencies:
-      '@antzy/eslint-config-ts': 1.4.9_t7ph7dpvh7g5bfovntuojbuu4i
+      '@antzy/eslint-config-ts': 1.4.9_eslint@8.26.0
       '@typescript-eslint/parser': 5.41.0_t7ph7dpvh7g5bfovntuojbuu4i
       eslint: 8.26.0
       eslint-plugin-vue: 9.7.0_eslint@8.26.0
@@ -121,7 +121,7 @@ packages:
       eslint: '>=8.18.0'
     dependencies:
       '@antzy/eslint-config-prettier': 1.4.9_eslint@8.26.0
-      '@antzy/eslint-config-vue': 1.4.9_t7ph7dpvh7g5bfovntuojbuu4i
+      '@antzy/eslint-config-vue': 1.4.9_eslint@8.26.0
       '@typescript-eslint/eslint-plugin': 5.41.0_xkoez77pqhokuvzzbmebx7tr74
       '@typescript-eslint/parser': 5.41.0_t7ph7dpvh7g5bfovntuojbuu4i
       eslint: 8.26.0
@@ -718,6 +718,10 @@ packages:
       - vue
     dev: false
 
+  /abbrev/1.1.1:
+    resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
+    dev: true
+
   /accepts/1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
@@ -1025,6 +1029,18 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.3
+    dev: true
+
+  /debug/3.2.7_supports-color@5.5.0:
+    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.3
+      supports-color: 5.5.0
     dev: true
 
   /debug/4.3.4:
@@ -2000,6 +2016,10 @@ packages:
       safer-buffer: 2.1.2
     dev: false
 
+  /ignore-by-default/1.0.1:
+    resolution: {integrity: sha512-Ius2VYcGNk7T90CppJqcIkS5ooHUZyIQK+ClZfMfMNFEF9VSE73Fq+906u/CWu92x4gzZMWOwfFYckPObzdEbA==}
+    dev: true
+
   /ignore/5.2.0:
     resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
     engines: {node: '>= 4'}
@@ -2450,6 +2470,30 @@ packages:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
     dev: true
 
+  /nodemon/2.0.20:
+    resolution: {integrity: sha512-Km2mWHKKY5GzRg6i1j5OxOHQtuvVsgskLfigG25yTtbyfRGn/GNvIbRyOf1PSCKJ2aT/58TiuUsuOU5UToVViw==}
+    engines: {node: '>=8.10.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      debug: 3.2.7_supports-color@5.5.0
+      ignore-by-default: 1.0.1
+      minimatch: 3.1.2
+      pstree.remy: 1.1.8
+      semver: 5.7.1
+      simple-update-notifier: 1.0.7
+      supports-color: 5.5.0
+      touch: 3.1.0
+      undefsafe: 2.0.5
+    dev: true
+
+  /nopt/1.0.10:
+    resolution: {integrity: sha512-NWmpvLSqUrgrAC9HCuxEvb+PSloHpqVu+FqcO4eeF2h5qYRhA7ev6KvelyQAKtegUbC6RypJnlEOhd8vloNKYg==}
+    hasBin: true
+    dependencies:
+      abbrev: 1.1.1
+    dev: true
+
   /normalize-package-data/2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
@@ -2684,6 +2728,10 @@ packages:
     hasBin: true
     dev: true
 
+  /pstree.remy/1.1.8:
+    resolution: {integrity: sha512-77DZwxQmxKnu3aR542U+X8FypNzbfJ+C5XQDk3uWjWxn6151aIMGthWYRXTqT1E5oJvg+ljaa2OJi+VfvCOQ8w==}
+    dev: true
+
   /punycode/2.1.1:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
@@ -2820,6 +2868,11 @@ packages:
     hasBin: true
     dev: true
 
+  /semver/7.0.0:
+    resolution: {integrity: sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==}
+    hasBin: true
+    dev: true
+
   /semver/7.3.8:
     resolution: {integrity: sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==}
     engines: {node: '>=10'}
@@ -2866,6 +2919,13 @@ packages:
       call-bind: 1.0.2
       get-intrinsic: 1.1.3
       object-inspect: 1.12.2
+
+  /simple-update-notifier/1.0.7:
+    resolution: {integrity: sha512-BBKgR84BJQJm6WjWFMHgLVuo61FBDSj1z/xSFUIozqO6wO7ii0JxCqlIud7Enr/+LhlbNI0whErq96P2qHNWew==}
+    engines: {node: '>=8.10.0'}
+    dependencies:
+      semver: 7.0.0
+    dev: true
 
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -3002,6 +3062,13 @@ packages:
     engines: {node: '>=0.6'}
     dev: false
 
+  /touch/3.1.0:
+    resolution: {integrity: sha512-WBx8Uy5TLtOSRtIq+M03/sKDrXCLHxwDcquSP2c43Le03/9serjQBIztjRz6FkJez9D/hleyAXTBGLwwZUw9lA==}
+    hasBin: true
+    dependencies:
+      nopt: 1.0.10
+    dev: true
+
   /tsconfig-paths/3.14.1:
     resolution: {integrity: sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==}
     dependencies:
@@ -3067,6 +3134,10 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+    dev: true
+
+  /undefsafe/2.0.5:
+    resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
 
   /unimport/0.7.0:

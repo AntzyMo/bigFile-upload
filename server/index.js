@@ -74,4 +74,17 @@ router.post('/delete', koaBody(), ctx => {
   }
 })
 
+// 中断请求后可以通过这个接口获取 最后上传的chunk
+router.post('/getLastUpload', koaBody(), ctx => {
+  const { name } = JSON.parse(ctx.request.body)
+  const file = store.get(name)
+  const hash = Object.keys(file.chunk).pop()
+  ctx.body = {
+    code: 200,
+    data: {
+      hash
+    }
+  }
+})
+
 app.listen(3000)

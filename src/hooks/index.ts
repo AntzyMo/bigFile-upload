@@ -10,6 +10,7 @@ interface file {
   propress: number
   total: number
   name: string
+  isStop: boolean
 }
 type fileMap = Record<string, file>
 
@@ -32,33 +33,44 @@ const generateChunks = (file: File, size: number) => {
 
 export default () => {
   const fileMap = reactive<fileMap>({})
+  let controller: AbortController
+
+  // 缓存 切片用于续传
+  const chunksCache = new Map()
 
   // 重写上传
   const rewriteRequest = async (options: UploadRequestOptions) => {
     const { file } = options
     const size = 1024 * 50 // 50kB
     const { totalChunks, total } = generateChunks(file, size)
+
+    chunksCache.set(file.name, { totalChunks, total })
+
     fileMap[file.name] = {
       total,
       propress: 0,
-      name: file.name
+      name: file.name,
+      isStop: false
     }
-    chunkRequest(totalChunks, file, total)
+    chunkRequest(totalChunks, file.name, total)
   }
 
-  const chunkRequest = async (map: chunk[][], file: File, total: number) => {
+  const chunkRequest = async (map: chunk[][], name: string, total: number) => {
     const [firstArr, ...rest] = map
-    console.log(firstArr, 'firstArr')
 
     if (!firstArr) return
+
+    controller = new AbortController()
+
     const requestMap = firstArr.map(item => {
       const formData = new FormData()
-      formData.append('filename', file.name)
+      formData.append('filename', name)
       formData.append('hash', String(item.hash))
       formData.append('chunk', item.chunk)
       formData.append('total', String(total))
       return fetch('http://localhost:3000/upload', {
         method: 'POST',
+        signal: controller.signal,
         body: formData
       })
     })
@@ -66,9 +78,11 @@ export default () => {
     try {
       await Promise.all(requestMap)
       const hash = firstArr.at(-1)!.hash + 1
-      fileMap[file.name].propress = Math.floor((100 * hash) / total)
-      chunkRequest(rest, file, total)
-    } catch (err) {}
+      fileMap[name].propress = Math.floor((100 * hash) / total)
+      chunkRequest(rest, name, total)
+    } catch (err) {
+      console.log(err, 'er')
+    }
   }
 
   const delFile = async ({ name }: file) => {
@@ -79,9 +93,42 @@ export default () => {
     delete fileMap[name]
   }
 
+  // 断点续传
+  const handleStartAndStop = async (data: file) => {
+    const { name } = data
+    data.isStop = !data.isStop
+    console.log('isStop', data.isStop)
+    if (data.isStop) {
+      controller.abort()
+      return
+    }
+    reloadUpload(name)
+  }
+
+  const reloadUpload = async (name: string) => {
+    const res = await fetch('http://localhost:3000/getLastUpload', {
+      method: 'POST',
+      body: JSON.stringify({ name })
+    })
+    const {
+      data: { hash }
+    } = await res.json()
+    const { totalChunks, total } = chunksCache.get(name)
+    for (const key in totalChunks) {
+      const arr = totalChunks[key]
+      const hashStart = arr.some(item => item.hash == hash)
+      if (hashStart) {
+        const list = totalChunks.slice(key)
+        chunkRequest(list, name, total)
+        return
+      }
+    }
+  }
+
   return {
     rewriteRequest,
     fileMap,
-    delFile
+    delFile,
+    handleStartAndStop
   }
 }

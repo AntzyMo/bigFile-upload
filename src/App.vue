@@ -3,7 +3,7 @@
 
   import useUpload from './hooks'
 
-  const { rewriteRequest, fileMap, delFile } = useUpload()
+  const { rewriteRequest, fileMap, delFile, handleStartAndStop } = useUpload()
 </script>
 
 <template>
@@ -37,7 +37,21 @@
           <div class="top">
             <div class="name">{{ item.name }}</div>
             <div class="btns">
-              <el-button>暂停</el-button>
+              <template v-if="item.propress != 100">
+                <img
+                  v-if="item.isStop"
+                  class="startIcon"
+                  src="./assets/start.svg"
+                  @click="handleStartAndStop(item)"
+                />
+                <img
+                  v-else
+                  class="startIcon"
+                  src="./assets/stop.svg"
+                  @click="handleStartAndStop(item)"
+                />
+              </template>
+
               <el-icon
                 class="close"
                 @click="delFile(item)"
@@ -100,6 +114,14 @@
             .btns {
               display: flex;
               align-items: center;
+              .startIcon {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+                &:hover {
+                  cursor: pointer;
+                }
+              }
               .close {
                 cursor: pointer;
                 &:hover {
