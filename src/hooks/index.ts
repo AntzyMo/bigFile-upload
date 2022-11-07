@@ -11,6 +11,7 @@ interface file {
   total: number
   name: string
   isStop: boolean
+  controller: AbortController
 }
 type fileMap = Record<string, file>
 
@@ -33,7 +34,6 @@ const generateChunks = (file: File, size: number) => {
 
 export default () => {
   const fileMap = reactive<fileMap>({})
-  let controller: AbortController
 
   // 缓存 切片用于续传
   const chunksCache = new Map()
@@ -50,7 +50,8 @@ export default () => {
       total,
       propress: 0,
       name: file.name,
-      isStop: false
+      isStop: false,
+      controller: new AbortController()
     }
     chunkRequest(totalChunks, file.name, total)
   }
@@ -60,8 +61,6 @@ export default () => {
 
     if (!firstArr) return
 
-    controller = new AbortController()
-
     const requestMap = firstArr.map(item => {
       const formData = new FormData()
       formData.append('filename', name)
@@ -70,7 +69,7 @@ export default () => {
       formData.append('total', String(total))
       return fetch('http://localhost:3000/upload', {
         method: 'POST',
-        signal: controller.signal,
+        signal: fileMap[name].controller.signal,
         body: formData
       })
     })
@@ -99,7 +98,8 @@ export default () => {
     data.isStop = !data.isStop
     console.log('isStop', data.isStop)
     if (data.isStop) {
-      controller.abort()
+      fileMap[name].controller.abort()
+      fileMap[name].controller = new AbortController()
       return
     }
     reloadUpload(name)
