@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@antzy/eslint-config': ^1.4.9
   '@element-plus/icons-vue': ^2.0.10
+  '@koa/cors': ^4.0.0
   '@koa/router': ^12.0.0
   '@vitejs/plugin-vue': ^3.1.2
   '@vue/tsconfig': ^0.1.3
@@ -11,7 +12,6 @@ specifiers:
   fs-extra: ^10.1.0
   koa: ^2.13.4
   koa-body: ^6.0.1
-  koa-cors: ^0.0.16
   nodemon: ^2.0.20
   npm-run-all: ^4.1.5
   sass: ^1.56.0
@@ -24,12 +24,12 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': 2.0.10_vue@3.2.41
+  '@koa/cors': 4.0.0
   '@koa/router': 12.0.0
   element-plus: 2.2.19_vue@3.2.41
   fs-extra: 10.1.0
   koa: 2.13.4
   koa-body: 6.0.1
-  koa-cors: 0.0.16
   vue: 3.2.41
 
 devDependencies:
@@ -236,6 +236,13 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@koa/cors/4.0.0:
+    resolution: {integrity: sha512-Y4RrbvGTlAaa04DBoPBWJqDR5gPj32OOz827ULXfgB1F7piD1MB/zwn8JR2LAnvdILhxUbXbkXGWuNVsFuVFCQ==}
+    engines: {node: '>= 14.0.0'}
+    dependencies:
+      vary: 1.1.2
+    dev: false
 
   /@koa/router/12.0.0:
     resolution: {integrity: sha512-cnnxeKHXlt7XARJptflGURdJaO+ITpNkOHmQu7NHmCoRinPbyvFzce/EG/E8Zy81yQ1W9MoSdtklc3nyaDReUw==}
@@ -2258,10 +2265,6 @@ packages:
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
-    dev: false
-
-  /koa-cors/0.0.16:
-    resolution: {integrity: sha512-s15knPxe3AJBi2I/ZMPL0pSqU+PLYLO6k5tI0AqClkzavowvocPlSdFUwaHNqtjHMhsGmiq2tiX/25iILJx9YA==}
     dev: false
 
   /koa/2.13.4:

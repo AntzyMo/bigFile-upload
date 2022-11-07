@@ -1,9 +1,9 @@
+import cors from '@koa/cors'
 import Router from '@koa/router'
 import { createReadStream, createWriteStream } from 'fs'
 import fs from 'fs-extra'
 import Koa from 'koa'
 import { koaBody } from 'koa-body'
-import cors from 'koa-cors'
 import { fileURLToPath, URL } from 'url'
 
 const app = new Koa()
