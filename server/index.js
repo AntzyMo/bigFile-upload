@@ -93,7 +93,7 @@ router.post('/delete', koaBody(), ctx => {
 router.post('/getLastUpload', koaBody(), ctx => {
   const { name } = JSON.parse(ctx.request.body)
   const file = store.get(name)
-  const hash = Object.keys(file.chunk).pop()
+  const hash = Object.keys(file.chunk).at(-1)
   ctx.body = {
     code: 200,
     data: {
