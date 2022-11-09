@@ -92,7 +92,7 @@ export default () => {
     delete fileMap[name]
   }
 
-  // 断点续传
+  // 点击开始暂停
   const handleStartAndStop = async (data: file) => {
     const { name } = data
     data.isStop = !data.isStop
@@ -105,6 +105,7 @@ export default () => {
     reloadUpload(name)
   }
 
+  // 断点续传
   const reloadUpload = async (name: string) => {
     const res = await fetch('http://localhost:3000/getLastUpload', {
       method: 'POST',
@@ -125,10 +126,22 @@ export default () => {
     }
   }
 
+  const openFile = async (name: string) => {
+    const res = await fetch('http://localhost:3000/preview', {
+      method: 'POST',
+      body: JSON.stringify({ name })
+    })
+    const {
+      data: { url }
+    } = await res.json()
+    window.open(url)
+  }
+
   return {
     rewriteRequest,
     fileMap,
     delFile,
-    handleStartAndStop
+    handleStartAndStop,
+    openFile
   }
 }

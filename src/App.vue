@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { CloseBold, UploadFilled } from '@element-plus/icons-vue'
+  import { CloseBold, UploadFilled, View } from '@element-plus/icons-vue'
 
   import useUpload from './hooks'
 
-  const { rewriteRequest, fileMap, delFile, handleStartAndStop } = useUpload()
+  const { rewriteRequest, fileMap, delFile, handleStartAndStop, openFile } =
+    useUpload()
 </script>
 
 <template>
@@ -51,7 +52,12 @@
                   @click="handleStartAndStop(item)"
                 />
               </template>
-
+              <el-icon
+                v-else
+                class="openView"
+                @click="openFile(item.name)"
+                ><View
+              /></el-icon>
               <el-icon
                 class="close"
                 @click="delFile(item)"
@@ -122,6 +128,12 @@
                   cursor: pointer;
                 }
               }
+
+              .openView {
+                margin-right: 10px;
+                cursor: pointer;
+              }
+
               .close {
                 cursor: pointer;
                 &:hover {
