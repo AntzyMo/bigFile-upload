@@ -19,10 +19,11 @@ type fileMap = Record<string, file>
 const generateChunks = (file: File, size: number) => {
   const totalChunks: chunk[][] = []
   const fileChunks: chunk[] = []
-  let index = 0
-  for (let cur = 0; cur < file.size; cur += size) {
+
+  for (let [cur, index] = [0, 0]; cur < file.size; cur += size) {
     fileChunks.push({ hash: index++, chunk: file.slice(cur, cur + size) })
   }
+  console.log('fileChunks', fileChunks)
 
   // 分成3组发一次请求
   for (let i = 0; i < fileChunks.length; i += 3) {
@@ -56,6 +57,7 @@ export default () => {
     chunkRequest(totalChunks, file.name, total)
   }
 
+  // 发送请求
   const chunkRequest = async (map: chunk[][], name: string, total: number) => {
     const [firstArr, ...rest] = map
 
@@ -96,10 +98,10 @@ export default () => {
   const handleStartAndStop = async (data: file) => {
     const { name } = data
     data.isStop = !data.isStop
-    console.log('isStop', data.isStop)
+
     if (data.isStop) {
-      fileMap[name].controller.abort()
-      fileMap[name].controller = new AbortController()
+      data.controller.abort()
+      data.controller = new AbortController()
       return
     }
     reloadUpload(name)
