@@ -1,10 +1,20 @@
 import Router from '@koa/router'
 import fs from 'fs-extra'
 
-import { initPath, UPLOAD_CACHE, UPLOAD_DIR } from './utils/index.js'
+import { initPath, UPLOAD_DIR } from './utils/index.js'
 import { addStore, store } from './utils/store.js'
 
 const router = new Router()
+
+// 删除临时上传文件
+const removeCache = name => {
+  const cacheMap = store.get(name)
+  const pathArr = Object.values(cacheMap.chunk)
+  pathArr.forEach((path, index) => {
+    fs.remove(path)
+    if (index === pathArr.length - 1) store.delete(name)
+  })
+}
 
 // 上传
 router.post('/upload', async ctx => {
@@ -24,14 +34,14 @@ router.post('/upload', async ctx => {
 })
 
 // 删除
-router.post('/delete', ctx => {
+router.post('/delete', async ctx => {
   const { name } = JSON.parse(ctx.request.body)
-  fs.removeSync(initPath(UPLOAD_DIR, name))
-  fs.removeSync(initPath(UPLOAD_CACHE, 'cache'))
+  await fs.remove(initPath(UPLOAD_DIR, name))
   ctx.body = {
     code: 200,
     msg: '删除成功'
   }
+  removeCache(name)
 })
 
 // 预览
