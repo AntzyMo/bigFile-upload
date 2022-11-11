@@ -26,7 +26,7 @@ export const addStore = (key, cb) => {
 
 const streamWrite = (key, list, writer) => {
   const [path, ...rest] = list
-  if (!path) return
+  if (!path) return writer.end()
 
   const reader = createReadStream(path)
   reader.pipe(writer, { end: false })
